@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Import OrbitControls
 
 export default {
     name: 'VRModelViewer',
@@ -16,7 +17,7 @@ export default {
     },
     mounted() {
         this.modelUrl = localStorage.getItem('modelUrl');
-        console.log("VRModelViewer:", this.modelUrl);
+        console.log(this.modelUrl);
         if (this.modelUrl) {
             this.initVRScene();
         } else {
@@ -36,8 +37,11 @@ export default {
             container.appendChild(renderer.domElement);
             container.appendChild(VRButton.createButton(renderer));
 
+            // Position the camera
+            camera.position.set(0, 10, 10);
+
             // Add lighting
-            const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+            const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 2);
             light.position.set(0.5, 1, 0.25);
             scene.add(light);
 
@@ -47,8 +51,8 @@ export default {
                 this.modelUrl,
                 (gltf) => {
                     const model = gltf.scene;
+                    model.position.set(0, 1.6, 0);
                     scene.add(model);
-                    model.position.set(0, 1.6, -3);
                 },
                 undefined,
                 (error) => {
@@ -56,9 +60,16 @@ export default {
                 }
             );
 
+            // Initialize OrbitControls
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+            controls.enableZoom = true;
+
             // Animate the scene
             const animate = () => {
                 renderer.setAnimationLoop(() => {
+                    controls.update(); // Update controls
                     renderer.render(scene, camera);
                 });
             };

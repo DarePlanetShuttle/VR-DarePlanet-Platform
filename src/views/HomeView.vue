@@ -1,19 +1,31 @@
 <template>
-    <div>
-        <h1>Microsoft Login with MSAL.js</h1>
-        <button v-if="!isAuthenticated" @click="login">Login with Microsoft</button>
-        <button v-if="isAuthenticated" @click="logout">Logout</button>
-        <button v-if="isAuthenticated" @click="getOneDriveFiles">Get OneDrive Files</button>
-        <button v-if="isAuthenticated" @click="load3DModel">Load 3D Model</button>
-
-        <div v-if="isAuthenticated">
-            <h2>Welcome, {{ username }}</h2>
+    <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
+        <div style="width: 25rem;">
+            <div class="card-body">
+                <div v-if="isAuthenticated">
+                    <h2>{{ username }}</h2>
+                    <button class="btn btn-danger" style="width: 25rem;" @click="logout">Logout</button>
+                </div>
+                <div v-if="!isAuthenticated">
+                    <h2>Microsoft Login with MSAL.js</h2>
+                    <button class="btn btn-primary" style="width: 25rem;" @click="login">Login with Microsoft</button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex flex-column" style="width: 25rem;" v-if="isAuthenticated">
+            <input class="form-control" v-model="modelUrl" type="text" name="modelUrl" id="modelUrl"
+                placeholder="Enter model URL">
+            <button class="btn btn-success mt-2" v-if="isAuthenticated" @click="load3DModel">Load 3D Model</button>
+            <br>
+            <button class="btn btn-primary mt-2" v-if="isAuthenticated" @click="getOneDriveFiles">Get OneDrive
+                Files</button>
         </div>
     </div>
 </template>
 
 <script>
-import msalInstance, { initializeMsal } from './msal.js';
+import msalInstance, { initializeMsal } from '../msal.js';
 
 export default {
     name: 'HomeView',
@@ -21,7 +33,7 @@ export default {
         return {
             isAuthenticated: false,
             username: '',
-            modelUrl: null
+            modelUrl: ''
         };
     },
     async created() {
@@ -91,8 +103,7 @@ export default {
             }
         },
         async load3DModel() {
-            const fileName = "espacio.glb";
-            const modelUrl = await this.getOneDriveFile(fileName);
+            const modelUrl = this.modelUrl;
             console.log("HomeView:", modelUrl);
             if (modelUrl) {
                 localStorage.setItem('modelUrl', modelUrl);
