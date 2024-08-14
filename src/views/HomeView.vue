@@ -27,9 +27,10 @@
                     <button class="btn btn-danger w-100" @click="logout">Logout</button>
                 </div>
                 <div v-if="!isAuthenticated">
-                    <h2></h2>
-                    <h5 class="text-center fw-bold">VR Viewer App</h5>
-                    <button class="btn btn-primary w-100 mt-2" @click="login">Login with Microsoft</button>
+                    
+                    <img class="img-fluid" src="../assets/logo-yara.jpeg"/>
+                    <h1 class="mb-5">Visor VR</h1>
+                    <button class="btn btn-primary w-100 mt-2" @click="login">Microsoft login</button>
                 </div>
             </div>
         </div>
@@ -152,5 +153,9 @@ export default {
 
 .model-button:hover::after {
     opacity: 1;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #154B6F;
 }
 </style>
