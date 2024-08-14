@@ -134,8 +134,9 @@ export default {
     padding: 5px 10px;
     border-radius: 4px;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.1s;
     white-space: nowrap;
+    width: 25rem;
 }
 
 .model-button:hover::after {
