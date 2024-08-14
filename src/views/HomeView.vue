@@ -1,17 +1,31 @@
 <template>
+
+    <div v-if="isAuthenticated">
+        <nav class="py-2 bg-body-tertiary border-bottom">
+            <div class="container d-flex flex-wrap">
+                <ul class="nav me-auto">
+                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">Bienvenido, {{ username }}</a></li>
+                </ul>
+                <ul class="nav">
+                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2" @click="logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
     <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
         <div style="width: 25rem;">
             <div class="card-body">
                 <div v-if="isAuthenticated">
-                    <p class="text-start fw-bold">Welcome, {{ username }}</p>
                     <div class="mt-4">
-                        <p class="text-start">Load model by URL:</p>
-                        <input type="text" v-model="modelUrl" class="form-control" placeholder="Enter model URL" />
+                        <p class="text-start">Cargar ficheros por URL:</p>
+                        <input type="text" v-model="modelUrl" class="form-control" placeholder="Introduzca aquí la URL del fichero" />
                         <button class="btn btn-success mt-2 w-100" :disabled="!modelUrl"
-                            @click="load3DModel(modelUrl)">Load Model from URL</button>
+                            @click="load3DModel(modelUrl)">Visualizar fichero</button>
                     </div>
-                    <p class="text-start mt-4">Show models from OneDrive folder:</p>
-                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">Get OneDrive Files</button>
+                    <br/><br/>
+                    <p class="text-start mt-4">Ficheros de OneDrive:</p>
+                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">Obtener ficheros de OneDrive</button>
                     <div v-if="models.length > 0" class="mt-2">
                         <i class="bi bi-caret-down-fill"></i>
                         <ul class="list-unstyled">
@@ -23,14 +37,13 @@
                             </li>
                         </ul>
                     </div>
-                    <p class="mt-4 text-start">Close session:</p>
-                    <button class="btn btn-danger w-100" @click="logout">Logout</button>
                 </div>
                 <div v-if="!isAuthenticated">
                     
                     <img class="img-fluid" src="../assets/logo-yara.jpeg"/>
                     <h1 class="mb-5">Visor VR</h1>
-                    <button class="btn btn-primary w-100 mt-2" @click="login">Microsoft login</button>
+                    <br/><br/>
+                    <button class="btn btn-primary w-100 mt-2" @click="login">Login</button>
                 </div>
             </div>
         </div>
