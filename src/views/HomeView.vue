@@ -3,11 +3,17 @@
         <div style="width: 25rem;">
             <div class="card-body">
                 <div v-if="isAuthenticated">
-                    <h4>{{ username }}</h4>
-                    <button class="btn btn-danger w-100" @click="logout">Logout</button>
-                    <button class="btn btn-primary mt-2 w-100" @click="getOneDriveFiles">Get OneDrive Files</button>
-                    <div v-if="models.length > 0" class="mt-4">
-                        <h5>OneDrive Models:</h5>
+                    <p class="text-start fw-bold">Welcome, {{ username }}</p>
+                    <div class="mt-4">
+                        <p class="text-start">Load model by URL:</p>
+                        <input type="text" v-model="modelUrl" class="form-control" placeholder="Enter model URL" />
+                        <button class="btn btn-success mt-2 w-100" :disabled="!modelUrl"
+                            @click="load3DModel(modelUrl)">Load Model from URL</button>
+                    </div>
+                    <p class="text-start mt-4">Show models from OneDrive folder:</p>
+                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">Get OneDrive Files</button>
+                    <div v-if="models.length > 0" class="mt-2">
+                        <i class="bi bi-caret-down-fill"></i>
                         <ul class="list-unstyled">
                             <li v-for="model in models" :key="model.id">
                                 <button class="btn btn-success mt-2 model-button w-100"
@@ -17,10 +23,13 @@
                             </li>
                         </ul>
                     </div>
+                    <p class="mt-4 text-start">Close session:</p>
+                    <button class="btn btn-danger w-100" @click="logout">Logout</button>
                 </div>
                 <div v-if="!isAuthenticated">
-                    <h2>Microsoft Login with MSAL.js</h2>
-                    <button class="btn btn-primary w-100" @click="login">Login with Microsoft</button>
+                    <h2></h2>
+                    <h5 class="text-center fw-bold">VR Viewer App</h5>
+                    <button class="btn btn-primary w-100 mt-2" @click="login">Login with Microsoft</button>
                 </div>
             </div>
         </div>
@@ -36,6 +45,7 @@ export default {
         return {
             isAuthenticated: false,
             username: '',
+            modelUrl: '',
             models: []
         };
     },
@@ -98,6 +108,7 @@ export default {
                         name: file.name,
                         downloadUrl: file['@microsoft.graph.downloadUrl']
                     }));
+                    console.log(this.models);
                 } else {
                     console.error("Error fetching OneDrive files:", response.statusText);
                 }
