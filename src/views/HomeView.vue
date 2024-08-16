@@ -1,5 +1,7 @@
 <template>
 
+<div class="global-div">
+
     <div v-if="isAuthenticated">
         <nav class="py-2 bg-body-tertiary border-bottom">
             <div class="container d-flex flex-wrap">
@@ -14,7 +16,12 @@
     </div>
 
     <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
-        <div style="width: 25rem;">
+        
+        <div v-if="!isAuthenticated" style="width: 25rem;" class="mb-3">
+            
+        </div>
+
+        <div style="width: 25rem;" class="login-div">
             <div class="card-body">
                 <div v-if="isAuthenticated">
                     <div class="mt-4">
@@ -39,15 +46,17 @@
                     </div>
                 </div>
                 <div v-if="!isAuthenticated">
-                    
-                    <img class="img-fluid" src="../assets/logo-yara.jpeg"/>
-                    <h1 class="mb-5">Visor VR</h1>
-                    <br/><br/>
-                    <button class="btn btn-primary w-100 mt-2" @click="login">Login</button>
+                    <img class="img-fluid mb-3" src="../assets/logo-yara2.jpg"/>
+                    <h4 class="text-center mb-5 fw-bold">· Visor de Realidad Virtual ·</h4>
+                    <p>Pulse el siguiente botón para conectarse con su cuenta Microsoft:</p>
+                    <button class="btn btn-primary w-100" @click="login">Login con cuenta Microsoft</button>
                 </div>
             </div>
         </div>
     </div>
+
+</div>
+
 </template>
 
 <script>
@@ -171,4 +180,17 @@ export default {
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #154B6F;
 }
+
+.login-div{
+    background: white;
+    padding: 2em;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.global-div{
+    background:url("../assets/fondo-yara.jpg") no-repeat center;
+    background-size: cover;
+}
+
 </style>
