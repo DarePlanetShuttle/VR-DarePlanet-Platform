@@ -1,12 +1,18 @@
 <template>
   <div id="app">
+    {{ welcome }}
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      welcome: process.env.VUE_APP_WELCOME || "hola"
+    }
+  }
 };
 </script>
 

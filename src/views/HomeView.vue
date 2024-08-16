@@ -4,7 +4,7 @@
         <nav class="py-2 bg-body-tertiary border-bottom">
             <div class="container d-flex flex-wrap">
                 <ul class="nav me-auto">
-                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">Bienvenido, {{ username }}</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">{{ welcome }}, {{ username }}</a></li>
                 </ul>
                 <ul class="nav">
                     <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2" @click="logout">Logout</a></li>
@@ -60,7 +60,8 @@ export default {
             isAuthenticated: false,
             username: '',
             modelUrl: '',
-            models: []
+            models: [],
+            welcome: process.env.VUE_APP_WELCOME
         };
     },
     async created() {
