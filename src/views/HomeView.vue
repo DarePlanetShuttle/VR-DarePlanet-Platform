@@ -87,12 +87,12 @@ export default {
         handleResponse(response) {
             if (response) {
                 this.isAuthenticated = true;
-                this.username = response.account.username;
+                this.username = response.account.name;
             } else {
                 const currentAccounts = msalInstance.getAllAccounts();
                 if (currentAccounts.length === 1) {
                     this.isAuthenticated = true;
-                    this.username = currentAccounts[0].username;
+                    this.username = currentAccounts[0].name;
                 }
             }
         },
@@ -100,7 +100,7 @@ export default {
             const currentAccounts = msalInstance.getAllAccounts();
             if (currentAccounts.length === 1) {
                 this.isAuthenticated = true;
-                this.username = currentAccounts[0].username;
+                this.username = currentAccounts[0].name;
             }
         },
         async getOneDriveFiles() {

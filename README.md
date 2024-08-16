@@ -20,5 +20,7 @@ npm run build
 npm run lint
 ```
 
+### For use the visualizer, you have to create a folder in your OneDrive named "models", and upload all the glb models inside.
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
