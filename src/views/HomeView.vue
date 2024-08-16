@@ -122,7 +122,6 @@ export default {
                         name: file.name,
                         downloadUrl: file['@microsoft.graph.downloadUrl']
                     }));
-                    console.log(this.models);
                 } else {
                     console.error("Error fetching OneDrive files:", response.statusText);
                 }
