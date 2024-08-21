@@ -59,6 +59,7 @@
 
 </template>
 
+
 <script>
 import msalInstance, { initializeMsal } from '../msal.js';
 
