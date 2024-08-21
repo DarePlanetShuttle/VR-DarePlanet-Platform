@@ -32,7 +32,7 @@
                     </div>
                     <br/><br/>
                     <p class="text-start mt-4">Ficheros de OneDrive:</p>
-                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">Obtener ficheros de OneDrive</button>
+                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">>Obtener ficheros de OneDrive</button>
                     <div v-if="models.length > 0" class="mt-2">
                         <i class="bi bi-caret-down-fill"></i>
                         <ul class="list-unstyled">
@@ -58,7 +58,6 @@
 </div>
 
 </template>
-
 
 <script>
 import msalInstance, { initializeMsal } from '../msal.js';
