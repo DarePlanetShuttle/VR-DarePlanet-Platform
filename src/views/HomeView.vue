@@ -1,61 +1,65 @@
 <template>
 
-<div class="global-div">
+    <div class="global-div">
 
-    <div v-if="isAuthenticated">
-        <nav class="py-2 bg-body-tertiary border-bottom">
-            <div class="container d-flex flex-wrap">
-                <ul class="nav me-auto">
-                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">{{ welcome }}, {{ username }}</a></li>
-                </ul>
-                <ul class="nav">
-                    <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2" @click="logout">Logout</a></li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-
-    <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
-        
-        <div v-if="!isAuthenticated" style="width: 25rem;" class="mb-3">
-            
+        <div v-if="isAuthenticated">
+            <nav class="py-2 bg-body-tertiary border-bottom">
+                <div class="container d-flex flex-wrap">
+                    <ul class="nav me-auto">
+                        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2 active"
+                                aria-current="page">{{ welcome }}, {{ username }}</a></li>
+                    </ul>
+                    <ul class="nav">
+                        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2"
+                                @click="logout">Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
         </div>
 
-        <div style="width: 25rem;" class="login-div">
-            <div class="card-body">
-                <div v-if="isAuthenticated">
-                    <div class="mt-4">
-                        <p class="text-start">Cargar ficheros por URL:</p>
-                        <input type="text" v-model="modelUrl" class="form-control" placeholder="Introduzca aquí la URL del fichero" />
-                        <button class="btn btn-success mt-2 w-100" :disabled="!modelUrl"
-                            @click="load3DModel(modelUrl)">Visualizar fichero</button>
+        <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
+
+            <div v-if="!isAuthenticated" style="width: 25rem;" class="mb-3">
+
+            </div>
+
+            <div style="width: 25rem;" class="login-div">
+                <div class="card-body">
+                    <div v-if="isAuthenticated">
+                        <div class="mt-4">
+                            <p class="text-start">Cargar ficheros por URL:</p>
+                            <input type="text" v-model="modelUrl" class="form-control"
+                                placeholder="Introduzca aquí la URL del fichero" />
+                            <button class="btn btn-success mt-2 w-100" :disabled="!modelUrl"
+                                @click="load3DModel(modelUrl)">Visualizar fichero</button>
+                        </div>
+                        <br /><br />
+                        <p class="text-start mt-4">Ficheros de OneDrive:</p>
+                        <button class="btn btn-primary w-100" @click="getOneDriveFiles">Obtener ficheros de
+                            OneDrive</button>
+                        <div v-if="models.length > 0" class="mt-2">
+                            <i class="bi bi-caret-down-fill dropdown-button"></i>
+                            <ul class="list-unstyled">
+                                <li v-for="model in models" :key="model.id">
+                                    <button class="btn btn-success mt-2 model-button w-100"
+                                        @click="load3DModel(model.downloadUrl)">
+                                        {{ model.name }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <br/><br/>
-                    <p class="text-start mt-4">Ficheros de OneDrive:</p>
-                    <button class="btn btn-primary w-100" @click="getOneDriveFiles">Obtener ficheros de OneDrive</button>
-                    <div v-if="models.length > 0" class="mt-2">
-                        <i class="bi bi-caret-down-fill"></i>
-                        <ul class="list-unstyled">
-                            <li v-for="model in models" :key="model.id">
-                                <button class="btn btn-success mt-2 model-button w-100"
-                                    @click="load3DModel(model.downloadUrl)">
-                                    {{ model.name }}
-                                </button>
-                            </li>
-                        </ul>
+                    <div v-if="!isAuthenticated">
+                        <img class="img-fluid mb-3" src="../assets/logo-yara2.jpg" />
+                        <h4 class="text-center mb-5 fw-bold">· Visor de Realidad Virtual ·</h4>
+                        <p>Pulse el siguiente botón para conectarse con su cuenta Microsoft:</p>
+                        <button class="btn btn-primary w-100" @click="login">Login con cuenta Microsoft</button>
                     </div>
-                </div>
-                <div v-if="!isAuthenticated">
-                    <img class="img-fluid mb-3" src="../assets/logo-yara2.jpg"/>
-                    <h4 class="text-center mb-5 fw-bold">· Visor de Realidad Virtual ·</h4>
-                    <p>Pulse el siguiente botón para conectarse con su cuenta Microsoft:</p>
-                    <button class="btn btn-primary w-100" @click="login">Login con cuenta Microsoft</button>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>
 
 </template>
 
@@ -125,13 +129,19 @@ export default {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 });
 
-                if (response.ok) {
+                if (response.status === 404) {
+                    alert("No se encontró la carpeta 'models' en OneDrive. Por favor, cree una carpeta llamada 'models'.");
+                } else if (response.ok) {
                     const data = await response.json();
-                    this.models = data.value.map(file => ({
-                        id: file.id,
-                        name: file.name,
-                        downloadUrl: file['@microsoft.graph.downloadUrl']
-                    }));
+                    if (data.value.length === 0) {
+                        alert("La carpeta 'models' en OneDrive está vacía. Por favor, agregue archivos a la carpeta.");
+                    } else {
+                        this.models = data.value.map(file => ({
+                            id: file.id,
+                            name: file.name,
+                            downloadUrl: file['@microsoft.graph.downloadUrl']
+                        }));
+                    }
                 } else {
                     console.error("Error fetching OneDrive files:", response.statusText);
                 }
@@ -177,20 +187,27 @@ export default {
     opacity: 1;
 }
 
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited {
     background-color: #154B6F;
 }
 
-.login-div{
+.login-div {
     background: white;
     padding: 2em;
     border-radius: 10px;
     text-align: left;
 }
 
-.global-div{
-    background:url("../assets/fondo-yara.jpg") no-repeat center;
+.global-div {
+    background: url("../assets/fondo-yara.jpg") no-repeat center;
     background-size: cover;
 }
 
+.dropdown-button {
+    display: flex;
+    justify-content: center;
+}
 </style>
