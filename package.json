@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^3.20.0",
+    "aframe": "^1.6.0",
+    "aframe-teleport-controls": "^0.3.1",
     "core-js": "^3.8.3",
-    "three": "^0.167.1",
+    "three": "^0.168.0",
     "vue": "^3.2.13",
     "vue-router": "^4.4.3"
   },

@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import VRModelViewer from '../views/VRModelViewer.vue';
+import HomeView from '../views/HomeView';
+import VRModelViewer from '../views/VRModelViewer';
+import Model360Viewer from '../views/Model360Viewer'; 
+import ModelExperienceViewer from '../views/ModelExperienceViewer';
 
 const routes = [
     { path: '/', component: HomeView },
@@ -8,6 +10,16 @@ const routes = [
         path: '/scene',
         name: 'model-viewer',
         component: VRModelViewer
+    },
+    {
+        path: '/360',
+        name: '360-model-viewer',
+        component: Model360Viewer
+    },
+    {
+        path: '/experience',
+        name: 'experience-model-viewer',
+        component: ModelExperienceViewer
     }
 ];
 

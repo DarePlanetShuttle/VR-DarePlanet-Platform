@@ -1,0 +1,40 @@
+{
+    "scenes": [
+        {
+            "name": "Dinner room",
+            "image": "/images/360/dinner-room.jpg",
+            "redesign": "/images/360/redesign-dinner-room.png",
+            "remove_furniture": "/images/360/remove-dinner-room.png"
+        },
+        {
+            "name": "Bedroom",
+            "image": "/images/360/bedroom.png",
+            "redesign": "/images/360/redesign-bedroom.png",
+            "remove_furniture": "/images/360/remove-bedroom.png"
+        },
+        {
+            "name": "Bedroom 2",
+            "image": "/images/360/second-room.jpg",
+            "redesign": "/images/360/redesign-second-room.png",
+            "remove_furniture": "/images/360/remove-second-room.png"
+        },
+        {
+            "name": " Diner Room",
+            "image": "/images/360/dinner-room.jpg",
+            "redesign": "/images/360/redesign-dinner-room.png",
+            "remove_furniture": "/images/360/remove-dinner-room.png"
+        },
+        {
+            "name": "Sun Room",
+            "image": "/images/360/sunroom.jpg",
+            "redesign": "/images/360/redesign-sunroom.png",
+            "remove_furniture": "/images/360/remove-sunroom.png"
+        },
+        {
+            "name": "Bath Room",
+            "image": "/images/360/bath_forest.jpg",
+            "redesign": "/images/360/redesign-bath-forest.png",
+            "remove_furniture": ""
+        }
+    ]
+}

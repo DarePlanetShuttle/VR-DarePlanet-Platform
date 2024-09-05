@@ -1,0 +1,12 @@
+[
+    {
+        "name": "DarePlanet",
+        "logo": "/images/general/logos/dareplanet-logo.png",
+        "background": "/images/general/backgrounds/general-background.png"
+    },
+    {
+        "name": "Yara",
+        "logo": "/images/general/logos/yara-logo.png",
+        "background": "/images/general/backgrounds/yara-background.jpg"
+    }
+]
