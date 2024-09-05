@@ -100,7 +100,7 @@ export default {
       localStorage.setItem('backgroundUrl', this.backgroundUrl);
     },
     handleResponse(response) {
-      if (response.account.username.split('@')[1] === 'dareplanet.com' || response.account.username.split('@')[1] === 'yara.com') {
+      if (response.account.username.split('@')[1] == 'dareplanet.com' || response.account.username.split('@')[1] == 'yara.com') {
         console.log(response.account.username.split('@')[1]);
         if (response) {
           this.isAuthenticated = true;
@@ -130,7 +130,7 @@ export default {
       const currentAccounts = msalInstance.getAllAccounts();
 
       if (currentAccounts.length === 1) {
-        if (currentAccounts[0].username.split('@')[1] === 'dareplanet.com' || currentAccounts[0].username.split('@')[1] === 'yara.com') {
+        if (currentAccounts[0].username.split('@')[1] == 'dareplanet.com' || currentAccounts[0].username.split('@')[1] == 'yara.com') {
           this.isAuthenticated = true;
           this.username = currentAccounts[0].name;
           this.userEmail = currentAccounts[0].username;
