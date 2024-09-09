@@ -1,9 +1,4 @@
 <template>
-  <div class="global-div"
-    :style="{ backgroundImage: `url(${backgroundUrl})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'cover' }">
-    <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
-    </div>
-  </div>
 </template>
 
 <script>
