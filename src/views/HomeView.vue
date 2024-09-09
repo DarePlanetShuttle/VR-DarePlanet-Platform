@@ -39,13 +39,13 @@
             <div class="d-flex flex-column justify-content-space-center align-items-center">
               <img class="img-fluid mb-4" :src="logoUrl" />
               <div class="d-block ms-2">
-                <h5 class="text-left fw-bold">Plataforma de Realidad Virtual</h5>
+                <h5 class="text-left fw-bold">Plataforma VR</h5>
                 <p class="text-left mt-0"></p>
               </div>
             </div>
-            <hr class="divider">
-            <p class="text-center description">Acceda con su correo para comenzar</p>
-            <button class="btn btn-primary w-100" @click="login">Login con cuenta Microsoft</button>
+            <hr class="divider mb-5">
+            <p class="text-center description">Haga login con su cuenta Microsoft para comenzar:</p>
+            <button class="btn btn-primary w-100" @click="login">Microsoft login</button>
           </div>
         </div>
       </div>
