@@ -4,8 +4,8 @@
 
     <div class="container-fluid" v-if="!isAuthenticated">
       <div class="row d-flex align-items-center">
-        <div class="col-md-4"></div>
-        <div class="col-md-8 vh-100 d-flex align-items-center" style="background:white">
+        <div class="col-md-6"></div>
+        <div class="col-md-4 vh-100 d-flex align-items-center" style="background:white">
           <div class="box">
             <div class="p-5">
                 <img class="img-fluid mb-4" :src="logoUrl" />
