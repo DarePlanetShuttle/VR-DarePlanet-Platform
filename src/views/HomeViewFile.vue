@@ -170,7 +170,7 @@ export default {
     async load3DModel(url) {
       if (url) {
         localStorage.setItem('modelUrl', url);
-        this.$router.replace({ name: 'model-viewer' });
+        this.$router.push({ name: 'model-viewer' });
       } else {
         console.error('Failed to load the model URL');
       }
