@@ -1,5 +1,13 @@
 <template>
+  <div>
+    <!-- Loading indicator -->
+    <div v-if="isLoading" class="loading-indicator">
+      <p>Cargando modelo...</p>
+    </div>
+    
+    <!-- 3D VR container -->
     <div ref="vrContainer" class="vr-container"></div>
+  </div>
 </template>
 
 <script>
@@ -12,7 +20,8 @@ export default {
     name: 'VRModelViewer',
     data() {
         return {
-            modelUrl: null
+            modelUrl: null,
+            isLoading: true // Agregamos un estado para controlar la carga
         };
     },
     mounted() {
@@ -53,6 +62,7 @@ export default {
                     const model = gltf.scene;
                     model.position.set(0, 1.6, 0);
                     scene.add(model);
+                    this.isLoading = false; // Ocultamos el indicador de carga cuando el modelo se ha cargado
                 },
                 undefined,
                 (error) => {
