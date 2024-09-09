@@ -22,44 +22,46 @@
       </div>
     </div>
 
-    <div v-if="isAuthenticated" class="vh-100 d-flex flex-column justify-content-center align-items-center">
-      <div class="login-div">
-        <div class="card-body">
+    <div v-if="isAuthenticated">
+      <nav class="navbar navbar-light bg-light text-start px-3 ">
+        <a class="navbar-brand fw-bold">
+          <img src="/images/general/logos/DP-Shuttle-Negro.png" alt="Company Logo" class="img-fluid" style="margin-right:15px; max-height:50px" />
+          Virtual Reality Platform
+        </a>
+        <div class="navbar-right text-end">
+          <label class="" style="margin-right: 15px"><small>Bienvenido/a, {{ username }}</small></label>
+          <a href="#" class="btn btn-outline-danger" @click="logout">Logout</a>
+        </div>
+      </nav>
 
-          <div v-if="isAuthenticated">
-            <div class="d-flex flex-column justify-content-between w-100">
-              <div class="d-flex justify-content-center m-auto">
-                <img :src="logoUrl" alt="Company Logo" class="img-fluid w-75 mb-5" />
-              </div>
-              <a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page" role="button">
-                Bienvenido/a, {{ username }}
-              </a>
-              <a href="#" class="btn btn-danger mb-5" @click="logout">Logout</a>
-            </div>
-            <hr class="mb-5">
-            <div class="mt-4">
-              <p class="text-start">Cargar ficheros por URL:</p>
-              <input type="text" v-model="modelUrl" class="form-control"
-                placeholder="Introduzca aquí la URL del fichero" />
-              <button class="btn btn-success mt-2 w-100" :disabled="!modelUrl" @click="load3DModel(modelUrl)">Visualizar
-                fichero</button>
-            </div>
-            <br /><br />
-            <p class="text-start mt-4">Ficheros de OneDrive:</p>
-            <button class="btn btn-primary w-100" @click="getOneDriveFiles">Obtener ficheros de OneDrive</button>
-            <div v-if="models.length > 0" class="mt-2">
-              <i class="bi bi-caret-down-fill dropdown-button"></i>
-              <ul class="list-unstyled">
-                <li v-for="model in models" :key="model.id">
-                  <button class="btn btn-success mt-2 model-button w-100" @click="load3DModel(model.downloadUrl)">
-                    <span class="model-name">{{ model.name }}</span>
-                  </button>
-                </li>
-              </ul>
-            </div>
+      
+
+      <div class="container-fluid bg-white p-5 text-start">
+
+        <div class="form-group">
+        <label class="text-start mb-1">Introduzca una url para cargar el fichero y pulse en el botón visualizar:</label>
+        <div class="input-group mb-3">
+          <input type="text" v-model="modelUrl" class="form-control" placeholder="Dirección URL del fichero" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" :disabled="!modelUrl" @click="load3DModel(modelUrl)">Visualizar fichero</button>
           </div>
         </div>
-      </div>
+        </div>
+
+        <hr class="my-5">
+        
+        <button class="btn btn-outline-primary px-3 mb-3" @click="getOneDriveFiles">Pulse aquí para obtener los ficheros de la carpeta "Modelos" de su OneDrive</button>
+        <div v-if="models.length > 0" class="mt-2">
+          <label class="mb-2">Lista de ficheros de la carpeta "Modelos" de OneDrive. Haga clic en un fichero para abrir el reproductor.</label>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-action list-group-item-light" v-for="model in models" :key="model.id">
+              <a href="#" class="m-0 w-100 d-block link-primary link-underline-opacity-0 link-underline-opacity-100-hover" @click="load3DModel(model.downloadUrl)">
+                <span class="model-name">{{ model.name }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>          
     </div>
   </div>
 </template>
@@ -238,6 +240,10 @@ export default {
 </script>
 
 <style scoped>
+.btn-primary{
+  background-color: #00A3F8 !important;
+  border: none !important;
+}
 .login-div {
   display: flex;
   flex-direction: column;

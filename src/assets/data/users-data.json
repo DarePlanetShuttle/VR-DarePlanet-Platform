@@ -2,11 +2,13 @@
     {
         "name": "DarePlanet",
         "logo": "./images/general/logos/dareplanet-logo.png",
-        "background": "./images/general/backgrounds/general-background.jpg"
+        "background": "./images/general/backgrounds/general-background.jpg",
+        "domain": "dareplanet.com"
     },
     {
         "name": "Yara",
         "logo": "./images/general/logos/yara-logo.png",
-        "background": "./images/general/backgrounds/yara-background.jpg"
+        "background": "./images/general/backgrounds/yara-background.jpg",
+        "domain": "yara.com"
     }
 ]
