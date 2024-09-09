@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
+//import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter } from 'vue-router';
 import HomeView from '../views/HomeView';
 import HomeViewFile from '../views/HomeViewFile';
 import VRModelViewer from '../views/VRModelViewer';
