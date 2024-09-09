@@ -2,11 +2,13 @@
   <div>
     <!-- Loading indicator -->
     <div v-if="isLoading" class="loading-indicator">
-      <p>Cargando modelo...</p>
+      <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+      </div>
     </div>
     
     <!-- 3D VR container -->
-    <div ref="vrContainer" class="vr-container"></div>
+    <div v-show="!isLoading" ref="vrContainer" class="vr-container"></div>
   </div>
 </template>
 
@@ -67,6 +69,7 @@ export default {
                 undefined,
                 (error) => {
                     console.error('An error occurred while loading the GLB model:', error);
+                    this.isLoading = false; // Ocultar indicador aunque ocurra un error
                 }
             );
 
@@ -108,11 +111,11 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  /*transform: translate(-50%, -50%);
   font-size: 1.5rem;
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 10px;*/
 }
 </style>
