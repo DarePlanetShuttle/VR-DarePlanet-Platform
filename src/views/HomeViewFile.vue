@@ -11,7 +11,7 @@ import msalInstance, { initializeMsal } from '../msal.js';
 import usersData from '../assets/data/users-data.json';
 
 export default {
-  name: 'HomeView',
+  name: 'HomeViewFile',
   data() {
     return {
       isAuthenticated: false,

@@ -14,7 +14,7 @@ const routes = [
     },
     {
         path: '/sceneFile',
-        name: 'model-viewer',
+        name: 'model-viewer-url',
         component: HomeViewFile
     },
     {
