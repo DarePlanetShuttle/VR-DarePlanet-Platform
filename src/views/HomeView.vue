@@ -1,7 +1,28 @@
 <template>
   <div class="global-div"
     :style="{ backgroundImage: `url(${backgroundUrl})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundSize: 'cover' }">
-    <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
+
+    <div class="container-fluid" v-if="!isAuthenticated">
+      <div class="row d-flex align-items-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-8 vh-100 d-flex align-items-center" style="background:white">
+          <div class="box">
+            <div class="p-5">
+                <img class="img-fluid mb-4" :src="logoUrl" />
+                <div class="d-block ms-2">
+                  <h5 class="text-left fw-bold">Virtual Reality Platform</h5>
+                  <p class="text-left mt-0"></p>
+                </div>
+              </div>
+              <p class="text-center description">Haga login con su cuenta Microsoft para comenzar:</p>
+              <button class="btn btn-primary w-50 mb-5" @click="login">Microsoft login</button>
+              <div class="mb-5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="isAuthenticated" class="vh-100 d-flex flex-column justify-content-center align-items-center">
       <div class="login-div">
         <div class="card-body">
 
@@ -37,32 +58,6 @@
               </ul>
             </div>
           </div>
-
-          <div v-if="!isAuthenticated" class="login-container">
-
-            <div class="container">
-              <div class="row">
-                <div class="md-4" style="background:blue">
-                  
-                </div>
-                <div class="md-8">
-
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex flex-column justify-content-space-center align-items-center">
-              <img class="img-fluid mb-4" :src="logoUrl" />
-              <div class="d-block ms-2">
-                <h5 class="text-left fw-bold">Virtual Reality Platform</h5>
-                <p class="text-left mt-0"></p>
-              </div>
-            </div>
-            <hr class="divider mb-5">
-            <p class="text-center description">Haga login con su cuenta Microsoft para comenzar:</p>
-            <button class="btn btn-primary w-100" @click="login">Microsoft login</button>
-          </div>
-
         </div>
       </div>
     </div>

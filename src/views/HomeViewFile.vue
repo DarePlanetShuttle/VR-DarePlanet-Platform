@@ -143,7 +143,7 @@ export default {
         });
 
         if (response.status === 404) {
-          alert("No se encontró la carpeta 'models' en OneDrive. Por favor, cree una carpeta llamada 'models'.");
+          alert("No se encontró la carpeta 'models' en OneDrive. Por favor, cree una carpeta llamada 'models' y vuelta a intentarlo.");
         } else if (response.ok) {
           const data = await response.json();
           if (data.value.length === 0) {
