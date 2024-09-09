@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView';
+import HomeViewFile from '../views/HomeViewFile';
 import VRModelViewer from '../views/VRModelViewer';
 import Model360Viewer from '../views/Model360Viewer'; 
 import ModelExperienceViewer from '../views/ModelExperienceViewer';
@@ -10,6 +11,11 @@ const routes = [
         path: '/scene',
         name: 'model-viewer',
         component: VRModelViewer
+    },
+    {
+        path: '/sceneFile',
+        name: 'model-viewer',
+        component: HomeViewFile
     },
     {
         path: '/360',
