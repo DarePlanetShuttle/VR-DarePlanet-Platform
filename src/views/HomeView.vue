@@ -5,15 +5,16 @@
       <div class="login-div">
         <div class="card-body">
           <div v-if="isAuthenticated">
-            <div class="d-flex flex-column justify-content-between align-items-center w-100">
+            <div class="d-flex flex-column justify-content-between w-100">
               <div class="d-flex justify-content-center m-auto">
                 <img :src="logoUrl" alt="Company Logo" class="img-fluid w-75 mb-5" />
               </div>
-              <a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page">
+              <a href="#" class="nav-link link-body-emphasis px-2 active" aria-current="page" role="button">
                 Bienvenido/a, {{ username }}
               </a>
-              <a href="#" class="nav-link link-body-emphasis px-2 logout-btn" @click="logout">Logout</a>
+              <a href="#" class="btn btn-danger mb-5" @click="logout">Logout</a>
             </div>
+            <hr class="mb-5">
             <div class="mt-4">
               <p class="text-start">Cargar ficheros por URL:</p>
               <input type="text" v-model="modelUrl" class="form-control"
