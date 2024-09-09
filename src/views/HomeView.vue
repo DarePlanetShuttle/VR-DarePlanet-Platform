@@ -4,6 +4,7 @@
     <div class="vh-100 d-flex flex-column justify-content-center align-items-center">
       <div class="login-div">
         <div class="card-body">
+
           <div v-if="isAuthenticated">
             <div class="d-flex flex-column justify-content-between w-100">
               <div class="d-flex justify-content-center m-auto">
@@ -36,11 +37,24 @@
               </ul>
             </div>
           </div>
+
           <div v-if="!isAuthenticated" class="login-container">
+
+            <div class="container">
+              <div class="row">
+                <div class="md-4" style="background:blue">
+                  
+                </div>
+                <div class="md-8">
+
+                </div>
+              </div>
+            </div>
+
             <div class="d-flex flex-column justify-content-space-center align-items-center">
               <img class="img-fluid mb-4" :src="logoUrl" />
               <div class="d-block ms-2">
-                <h5 class="text-left fw-bold">Plataforma VR</h5>
+                <h5 class="text-left fw-bold">Virtual Reality Platform</h5>
                 <p class="text-left mt-0"></p>
               </div>
             </div>
@@ -48,6 +62,7 @@
             <p class="text-center description">Haga login con su cuenta Microsoft para comenzar:</p>
             <button class="btn btn-primary w-100" @click="login">Microsoft login</button>
           </div>
+
         </div>
       </div>
     </div>
@@ -69,6 +84,7 @@ export default {
       models: [],
       logoUrl: localStorage.getItem('logoUrl') || usersData[0].logo,
       backgroundUrl: localStorage.getItem('backgroundUrl') || usersData[0].background,
+      exp: null,
     };
   },
   async created() {
@@ -136,6 +152,7 @@ export default {
           this.username = currentAccounts[0].name;
           this.userEmail = currentAccounts[0].username;
           this.loadConfig();
+          this.checkUrlFile();
         } else {
           alert("Acceso denegado, cierre sesión y consulte al administrador");
           this.logout();
@@ -160,8 +177,26 @@ export default {
       } catch (error) {
         console.error('Error loading config:', error);
       }
-    }
-    ,
+    },
+    async checkUrlFile() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('exp')) {
+          this.exp = urlParams.get('exp');
+          await this.getOneDriveFiles();
+          const file = this.models.find(file => file.name === this.exp + ".glb");
+
+          if (file) {
+            this.load3DModel(file.downloadUrl);
+          }else{
+            alert("No se encuentra el fichero en OneDrive para ese expediente.");
+          }
+        }
+      } catch (error) {
+        console.error('Error loading file from url:', error);
+      }
+    },
     async getOneDriveFiles() {
       try {
         const account = msalInstance.getAllAccounts()[0];
