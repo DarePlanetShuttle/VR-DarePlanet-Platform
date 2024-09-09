@@ -6,13 +6,19 @@ module.exports = defineConfig({
   publicPath: '/',
   chainWebpack: config => {
     config.plugin('copy').tap(([options]) => {
+      // Verificamos si 'patterns' existe. Si no, lo creamos como un array vacío.
+      if (!options[0].patterns) {
+        options[0].patterns = [];
+      }
+      
+      // Agregamos la nueva redirección a las patterns
       options[0].patterns.push({
-        from: path.resolve(__dirname, '_redirects'), // Ruta de tu archivo _redirects en el proyecto
-        to: path.resolve(__dirname, 'dist'),        // Copia el archivo a la carpeta dist
+        from: path.resolve(__dirname, '_redirects'),
+        to: path.resolve(__dirname, 'dist'),
         toType: 'dir'
       });
+
       return [options];
     });
   }
 });
-
