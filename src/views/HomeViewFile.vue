@@ -36,19 +36,6 @@ export default {
         console.error("Login failed:", error);
       }
     },
-    logout() {
-      msalInstance.logoutPopup();
-      this.isAuthenticated = false;
-      this.username = '';
-      this.userEmail = '';
-      this.models = [];
-
-      this.logoUrl = usersData[0].logo;
-      this.backgroundUrl = usersData[0].background;
-
-      localStorage.setItem('logoUrl', this.logoUrl);
-      localStorage.setItem('backgroundUrl', this.backgroundUrl);
-    },
     handleResponse(response) {
       if (response.account.username.split('@')[1] == 'dareplanet.com' || response.account.username.split('@')[1] == 'yara.com') {
         console.log(response.account.username.split('@')[1]);
@@ -121,6 +108,7 @@ export default {
           const file = this.models.find(file => file.name === this.exp + ".glb");
 
           if (file) {
+            console.log(file.downloadUrl);
             this.load3DModel(file.downloadUrl);
           }else{
             alert("No se encuentra el fichero en OneDrive para ese expediente.");
