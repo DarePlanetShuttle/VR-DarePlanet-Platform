@@ -140,14 +140,26 @@ export default {
           account
         });
 
-        const response = await fetch("https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children", {
+        const response = await axios.get(
+          `https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children`, 
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+              $filter: `name eq '${fileName}'` // Filtrar por el nombre del archivo
+            }
+          }
+        );
+
+        /*const response = await fetch("https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children", {
           headers: { 
             Authorization: `Bearer ${accessToken}` 
           },
           params: {
             $filter: `name eq '${fileName}'` // Filtra por el nombre del archivo
           }
-        });
+        });*/
 
         // Verificar si el archivo fue encontrado
         const file = response.data.value.find(file => file.name === fileName);
