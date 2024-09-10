@@ -6,6 +6,11 @@
 import msalInstance, { initializeMsal } from '../msal.js';
 import usersData from '../assets/data/users-data.json';
 
+// Codificar la URL de la carpeta compartida a Base64
+function encodeSharingLink(sharingUrl) {
+  return btoa(`u!${encodeURIComponent(sharingUrl)}`);
+}
+
 export default {
   name: 'HomeViewFile',
   data() {
@@ -108,7 +113,7 @@ export default {
           const file = this.models.find(file => file.name === this.exp + ".glb");
 
           if (file) {
-            console.log(file.downloadUrl);
+            //console.log(file.downloadUrl);
             this.load3DModel(file.downloadUrl);
           }else{
             alert("No se encuentra el fichero en OneDrive para ese expediente.");
@@ -116,6 +121,46 @@ export default {
         }
       } catch (error) {
         console.error('Error loading file from url:', error);
+      }
+    },
+    async searchFileOneDrive(sharingUrl, fileName){
+
+      /*
+      Codigo para llamar a esta función:
+        const sharingUrl = 'URL_DE_LA_CARPETA_COMPARTIDA'; // La URL de la carpeta compartida de OneDrive
+        this.file = await searchFileInSharedFolder(sharingUrl, this.fileName);
+      */
+
+      const shareId = encodeSharingLink(sharingUrl);
+
+      try {
+        const account = msalInstance.getAllAccounts()[0];
+        const { accessToken } = await msalInstance.acquireTokenSilent({
+          scopes: ["Files.Read"],
+          account
+        });
+
+        const response = await fetch("https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children", {
+          headers: { 
+            Authorization: `Bearer ${accessToken}` 
+          },
+          params: {
+            $filter: `name eq '${fileName}'` // Filtra por el nombre del archivo
+          }
+        });
+
+        // Verificar si el archivo fue encontrado
+        const file = response.data.value.find(file => file.name === fileName);
+        if (file) {
+          console.log('Archivo encontrado:', file);
+          return file; // Retorna el archivo encontrado
+        } else {
+          console.log('Archivo no encontrado');
+          return null;
+        }
+
+      } catch (error) {
+        console.error("Error acquiring token or fetching files:", error);
       }
     },
     async getOneDriveFiles() {
