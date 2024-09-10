@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>A-Frame: Quest movement and interaction</title>
+    <meta name="description" content="Moving around an A-Frame scene with Quest touch controllers.">
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="js/aframe-environment-component.js"></script>
+    <script src="js/controller-listener.js"></script>
+    <script src="js/player-move.js"></script>
+    <script src="js/raycaster-extras.js"></script>
+</head>
+
+<body>
+
+<a-scene environment="preset: default;" renderer="antialias: true;">
+        
+    <a-assets>
+        <img id="gradient" src="images/gradient-fade.png" />
+        <a-asset-item id="model" src="/models/1623327307.glb"></a-asset-item>
+    </a-assets>
+
+    <a-sky 
+        color = "#000337">
+    </a-sky>
+
+    <!-- use a simple mesh for raycasting/navigation -->
+    <a-plane
+        width="100" height="100"
+        rotation="-90 0 0"
+        position="0 0.01 0"
+        visible="false"
+        class="groundPlane"
+        raycaster-target>
+    </a-plane>
+
+    <a-entity 
+        id="player" 
+        position="0 0.4 0" 
+        player-move="controllerListenerId: #controller-data;
+                     navigationMeshClass: groundPlane;">
+        
+        <a-camera></a-camera>
+    
+        <a-entity 
+            id="controller-data" 
+            controller-listener="leftControllerId:  #left-controller; 
+                                 rightControllerId: #right-controller;">
+        </a-entity>
+
+        <a-entity 
+            id="left-controller"
+            oculus-touch-controls="hand: left">
+        </a-entity>
+
+        <!-- experiment with raycasting interval; slight performance improvement but jittery appearance in world -->
+        <a-entity
+            id="right-controller"
+            oculus-touch-controls="hand: right"
+            raycaster="objects: .raycaster-target; interval: 0;"
+            raycaster-extras="controllerListenerId: #controller-data; 
+                              beamImageSrc: #gradient; beamLength: 0.5;">
+        </a-entity>
+
+    </a-entity>
+
+    <!-- Load the .glb model -->
+    <a-entity
+        gltf-model="#model"
+        position="0 1.7 0"
+        scale="1 1 1"
+        raycaster-target>
+    </a-entity>
+
+</a-scene>
+
+</body>
+</html>
