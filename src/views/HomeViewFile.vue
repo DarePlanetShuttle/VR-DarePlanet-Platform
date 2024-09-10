@@ -104,27 +104,7 @@ export default {
       } catch (error) {
         console.error('Error loading config:', error);
       }
-    },
-    async checkUrlFile() {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        if (urlParams.has('exp')) {
-          this.exp = urlParams.get('exp');
-          await this.getOneDriveFiles();
-          const file = this.models.find(file => file.name === this.exp + ".glb");
-
-          if (file) {
-            //console.log(file.downloadUrl);
-            this.load3DModel(file.downloadUrl);
-          }else{
-            alert("No se encuentra el fichero en OneDrive para ese expediente.");
-          }
-        }
-      } catch (error) {
-        console.error('Error loading file from url:', error);
-      }
-    },
+    },    
     async searchFileOneDrive(fileName){
 
       const sharingUrl = "https://digitaltakers.sharepoint.com/:f:/s/Sociedades/Eu2oD3Lp-BdAnOgPfRUJHGUBxveXMo-ehbroQRmwNlCzKw?e=fPxfAE";      
@@ -163,39 +143,6 @@ export default {
         console.error("Error acquiring token or fetching files:", error);
       }
     },
-    async getOneDriveFiles() {
-      try {
-        const account = msalInstance.getAllAccounts()[0];
-        const { accessToken } = await msalInstance.acquireTokenSilent({
-          scopes: ["Files.Read"],
-          account
-        });
-
-        const response = await fetch("https://graph.microsoft.com/v1.0/me/drive/root:/models:/children", {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-
-        if (response.status === 404) {
-          alert("No se encontró la carpeta 'models' en OneDrive. Por favor, cree una carpeta llamada 'models' y vuelta a intentarlo.");
-        } else if (response.ok) {
-          const data = await response.json();
-          if (data.value.length === 0) {
-            alert("La carpeta 'models' en OneDrive está vacía. Por favor, agregue archivos a la carpeta.");
-          } else {
-            this.models = data.value.map(file => ({
-              id: file.id,
-              name: file.name,
-              downloadUrl: file['@microsoft.graph.downloadUrl']
-            }));
-            console.log(this.models);
-          }
-        } else {
-          console.error("Error fetching OneDrive files:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error acquiring token or fetching files:", error);
-      }
-    },
     async load3DModel(url) {
       if (url) {
         localStorage.setItem('modelUrl', url);
@@ -207,88 +154,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.login-div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  width: 35%;
-  height: 100vh;
-  background: whitesmoke;
-  padding: 2em;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-
-.login-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  height: 100%;
-}
-
-.divider {
-  border-top: 1px solid #9da0a3;
-}
-
-.description {
-  font-size: 1rem;
-  color: #495057;
-  margin-bottom: 1.5rem;
-}
-
-.btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited {
-  background-color: #244468;
-  border: 2px solid #244468;
-  padding: 10px 0;
-  font-weight: 500;
-}
-
-.btn-primary:hover {
-  background-color: transparent;
-  color: #244468;
-  font-weight: 500;
-  border: 2px solid #244468;
-}
-
-.btn-success {
-  background-color: #28a745;
-  border: 2px solid #28a745;
-  padding: 10px 0;
-  font-weight: 500;
-}
-
-.btn-success:hover {
-  background-color: transparent;
-  color: #28a745;
-  font-weight: 500;
-  border: 2px solid #28a745;
-}
-
-h5 {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.card-body {
-  display: flex;
-  align-items: center;
-  padding: 2rem;
-}
-
-input {
-  height: max-content;
-}
-
-.dropdown-button {
-  display: flex;
-  justify-content: center;
-  margin: auto;
-}
-</style>
