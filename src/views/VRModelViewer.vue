@@ -1,121 +1,106 @@
 <template>
   <div>
-    <!-- Loading indicator -->
-    <div v-if="isLoading" class="loading-indicator">
-      <div class="spinner-border" role="status">
-        <span class="sr-only"></span>
-      </div>
-    </div>
-    
-    <!-- 3D VR container -->
-    <div v-show="!isLoading" ref="vrContainer" class="vr-container"></div>
+    <a-scene environment="preset: default;" renderer="antialias: true;">
+      <a-assets>
+        <img id="gradient" src="/images/gradient-fade.png" />
+        <!-- El modelo no se carga de inmediato -->
+      </a-assets>
+
+      <a-sky color="#000337"></a-sky>
+
+      <a-plane
+        width="100"
+        height="100"
+        rotation="-90 0 0"
+        position="0 0.01 0"
+        visible="false"
+        class="groundPlane"
+        raycaster-target
+      ></a-plane>
+
+      <a-entity
+        id="player"
+        position="0 0.4 0"
+        player-move="controllerListenerId: #controller-data; navigationMeshClass: groundPlane;"
+      >
+        <a-camera></a-camera>
+
+        <a-entity
+          id="controller-data"
+          controller-listener="leftControllerId: #left-controller; rightControllerId: #right-controller;"
+        ></a-entity>
+
+        <a-entity
+          id="left-controller"
+          oculus-touch-controls="hand: left"
+        ></a-entity>
+
+        <a-entity
+          id="right-controller"
+          oculus-touch-controls="hand: right"
+          raycaster="objects: .raycaster-target; interval: 0;"
+          raycaster-extras="controllerListenerId: #controller-data; beamImageSrc: #gradient; beamLength: 0.5;"
+        ></a-entity>
+      </a-entity>
+
+      <!-- El modelo será añadido después -->
+      <a-entity
+        v-if="modelLoaded"
+        gltf-model="#model"
+        position="0 1.7 0"
+        scale="1 1 1"
+        raycaster-target
+      ></a-entity>
+    </a-scene>
   </div>
 </template>
 
 <script>
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Import OrbitControls
-
 export default {
-    name: 'VRModelViewer',
-    data() {
-        return {
-            modelUrl: null,
-            isLoading: true // Agregamos un estado para controlar la carga
-        };
-    },
-    mounted() {
-        this.modelUrl = localStorage.getItem('modelUrl');
-        console.log(this.modelUrl);
-        if (this.modelUrl) {
-            this.initVRScene();
-        } else {
-            console.error('No model URL found.');
-        }
-    },
-    methods: {
-        initVRScene() {
-            const container = this.$refs.vrContainer;
+  name: "VRModelViewer",
+  data() {
+    return {
+      modelLoaded: false, // Controlar cuando el modelo ha sido cargado
+    };
+  },
+  mounted() {
+    const loadScript = (src) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
 
-            // Set up the scene, camera, and renderer
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.xr.enabled = true;
-            container.appendChild(renderer.domElement);
-            container.appendChild(VRButton.createButton(renderer));
+    loadScript("/js/aframe-environment-component.min.js");
+    loadScript("/js/controller-listener.js");
+    loadScript("/js/player-move.js");
+    loadScript("/js/raycaster-extras.js");
 
-            // Position the camera
-            camera.position.set(0, 10, 10);
+    // Asegúrate de que la escena de A-Frame esté completamente cargada
+    document.querySelector("a-scene").addEventListener("loaded", () => {
+      console.log("A-Frame scene is fully loaded");
 
-            // Add lighting
-            const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 2);
-            light.position.set(0.5, 1, 0.25);
-            scene.add(light);
+      // Agregar el asset del modelo dinámicamente después de que la escena esté cargada
+      const assets = document.querySelector("a-assets");
+      const modelAsset = document.createElement("a-asset-item");
+      modelAsset.setAttribute("id", "model");
+      modelAsset.setAttribute("src", "/models/1623327307.glb");
+      assets.appendChild(modelAsset);
 
-            // Load the GLB model
-            const loader = new GLTFLoader();
-            loader.load(
-                this.modelUrl,
-                (gltf) => {
-                    const model = gltf.scene;
-                    model.position.set(0, 1.6, 0);
-                    scene.add(model);
-                    this.isLoading = false; // Ocultamos el indicador de carga cuando el modelo se ha cargado
-                },
-                undefined,
-                (error) => {
-                    console.error('An error occurred while loading the GLB model:', error);
-                    this.isLoading = false; // Ocultar indicador aunque ocurra un error
-                }
-            );
-
-            // Initialize OrbitControls
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.25;
-            controls.enableZoom = true;
-
-            // Animate the scene
-            const animate = () => {
-                renderer.setAnimationLoop(() => {
-                    controls.update(); // Update controls
-                    renderer.render(scene, camera);
-                });
-            };
-
-            animate();
-
-            // Handle window resizing
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-    }
+      // Espera un momento para asegurarte de que el modelo ha sido añadido
+      setTimeout(() => {
+        this.modelLoaded = true;
+        console.log("Model asset dynamically added and loaded");
+      }, 1000);
+    });
+  },
 };
 </script>
 
 <style scoped>
-.vr-container {
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
-.loading-indicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /*transform: translate(-50%, -50%);
-  font-size: 1.5rem;
-  color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 10px;*/
-}
+/* Puedes agregar estilos personalizados si lo necesitas */
 </style>
