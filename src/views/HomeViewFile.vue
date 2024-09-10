@@ -8,7 +8,8 @@ import usersData from '../assets/data/users-data.json';
 
 // Codificar la URL de la carpeta compartida a Base64
 function encodeSharingLink(sharingUrl) {
-  return btoa(`u!${encodeURIComponent(sharingUrl)}`);
+  const base64Value = btoa(unescape(encodeURIComponent(sharingUrl)));
+  return `u!${base64Value.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}`;
 }
 
 export default {
@@ -126,13 +127,7 @@ export default {
     },
     async searchFileOneDrive(fileName){
 
-      /*
-      Codigo para llamar a esta función:
-        const sharingUrl = 'URL_DE_LA_CARPETA_COMPARTIDA'; // La URL de la carpeta compartida de OneDrive
-        this.file = await searchFileInSharedFolder(this.fileName);
-      */
-      const sharingUrl = "https://digitaltakers.sharepoint.com/:f:/s/Sociedades/Eu2oD3Lp-BdAnOgPfRUJHGUBxveXMo-ehbroQRmwNlCzKw?e=QbPI7p"
-
+      const sharingUrl = "https://digitaltakers.sharepoint.com/:f:/s/Sociedades/Eu2oD3Lp-BdAnOgPfRUJHGUBxveXMo-ehbroQRmwNlCzKw?e=fPxfAE";      
       const shareId = encodeSharingLink(sharingUrl);
 
       try {
@@ -143,25 +138,27 @@ export default {
         });
 
         const url = new URL(`https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children`);
-        url.searchParams.append('$filter', `name eq '${fileName}'`);
+        url.searchParams.append('$filter', `name eq '${fileName}.glb'`);
 
         const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          }
+          headers: { Authorization: `Bearer ${accessToken}` }
         });
 
-        // Verificar si el archivo fue encontrado
-        const file = response.data.value.find(file => file.name === fileName);
-        if (file) {
-          console.log('Archivo encontrado:', file);
-          return file; // Retorna el archivo encontrado
-        } else {
-          console.log('Archivo no encontrado');
-          return null;
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
 
+        const data = await response.json();
+        
+        // Verificar si el archivo fue encontrado
+        const file = data.value.find(file => file.name === fileName + ".glb");
+        if (file) {
+          this.load3DModel(file['@microsoft.graph.downloadUrl']);
+          //return file; // Retorna el archivo encontrado
+        } else {
+          console.log('Archivo no encontrado');
+          //return null;
+        }
       } catch (error) {
         console.error("Error acquiring token or fetching files:", error);
       }
