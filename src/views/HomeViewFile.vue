@@ -77,7 +77,8 @@ export default {
           this.username = currentAccounts[0].name;
           this.userEmail = currentAccounts[0].username;
           this.loadConfig();
-          this.checkUrlFile();
+          //this.checkUrlFile();
+          this.searchFileOneDrive("1623327307");
         } else {
           alert("Acceso denegado, cierre sesión y consulte al administrador");
           this.logout();
@@ -123,13 +124,14 @@ export default {
         console.error('Error loading file from url:', error);
       }
     },
-    async searchFileOneDrive(sharingUrl, fileName){
+    async searchFileOneDrive(fileName){
 
       /*
       Codigo para llamar a esta función:
         const sharingUrl = 'URL_DE_LA_CARPETA_COMPARTIDA'; // La URL de la carpeta compartida de OneDrive
-        this.file = await searchFileInSharedFolder(sharingUrl, this.fileName);
+        this.file = await searchFileInSharedFolder(this.fileName);
       */
+      const sharingUrl = "https://digitaltakers.sharepoint.com/:f:/s/Sociedades/Eu2oD3Lp-BdAnOgPfRUJHGUBxveXMo-ehbroQRmwNlCzKw?e=QbPI7p"
 
       const shareId = encodeSharingLink(sharingUrl);
 
@@ -140,26 +142,15 @@ export default {
           account
         });
 
-        const response = await axios.get(
-          `https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children`, 
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-              $filter: `name eq '${fileName}'` // Filtrar por el nombre del archivo
-            }
-          }
-        );
+        const url = new URL(`https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children`);
+        url.searchParams.append('$filter', `name eq '${fileName}'`);
 
-        /*const response = await fetch("https://graph.microsoft.com/v1.0/shares/${shareId}/driveItem/children", {
-          headers: { 
-            Authorization: `Bearer ${accessToken}` 
-          },
-          params: {
-            $filter: `name eq '${fileName}'` // Filtra por el nombre del archivo
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
           }
-        });*/
+        });
 
         // Verificar si el archivo fue encontrado
         const file = response.data.value.find(file => file.name === fileName);
